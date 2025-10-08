@@ -1,6 +1,8 @@
 package com.devsuperior.dscommerce.services;
 
+import com.devsuperior.dscommerce.dto.CategoryDTO;
 import com.devsuperior.dscommerce.dto.ProductMinDTO;
+import com.devsuperior.dscommerce.entities.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -63,17 +65,25 @@ public class ProductService {
     		throw new ResourceNotFoundException("Recurso não encontrado");
     	}
     	try {
-            repository.deleteById(id);    		
+            repository.deleteById(id);
     	}
         catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Falha de integridade referencial");
         }
     }
 
+    // METODO QUE AUXILIA QUANDO SE UTILIZA INSERT OU UPDATE. CÓDIGO MAIS LIMPO.
     private void copyDtoToEntity(ProductDTO dto, Product entity) {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
         entity.setImgUrl(dto.getImgUrl());
+        entity.getCategories().clear();  // LIMPAR CATEGORIAS ANTIGAS,
+        // DEPOIS  BUSCAR AS NOVAS INSERIDAS OU ATUALIZADAS.
+        for (CategoryDTO catDTO : dto.getCategories()){
+            Category cat = new Category();
+            cat.setId(catDTO.getId());
+            entity.getCategories().add(cat);
+        }
     }
 }
