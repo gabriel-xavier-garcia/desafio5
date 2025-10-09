@@ -3,8 +3,7 @@ package com.devsuperior.dscommerce.dto;
 import com.devsuperior.dscommerce.entities.Order;
 import com.devsuperior.dscommerce.entities.OrderItem;
 import com.devsuperior.dscommerce.entities.OrderStatus;
-import org.springframework.security.core.GrantedAuthority;
-
+import jakarta.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,7 @@ public class OrderDTO {
 
     private PaymentDTO payment;
 
+    @NotEmpty(message = "Campo precisa ter no minimo um item")
     private List<OrderItemDTO> items = new ArrayList<>();
 
     public OrderDTO(Long id, OrderStatus status, ClientDTO client, Instant moment, PaymentDTO payment) {
